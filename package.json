@@ -9,11 +9,16 @@
 		"build": "tsc",
 		"prepublishOnly": "npm run build"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/paulbarmstrong/bucket-with-objects-cdk.git"
+	},
 	"devDependencies": {
 		"typescript": "^5.4.5"
 	},
 	"peerDependencies": {
 		"aws-cdk-lib": "^2.140.0",
 		"constructs": "^10.3.0"
-	}
+	},
+	"keywords": ["cdk", "bucket", "objects", "construct", "s3", "deployment"]
 }
