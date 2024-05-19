@@ -1,4 +1,4 @@
-## bucket-with-objects-cdk
+## cdk-bucket-with-objects
 
 ### Experimental Notice
 
@@ -20,7 +20,7 @@ This is an example of how it may be used in a CDK app:
 import * as cdk from "aws-cdk-lib"
 import * as logs from "aws-cdk-lib/aws-logs"
 import * as s3_assets from "aws-cdk-lib/aws-s3-assets"
-import { BucketWithObjects } from "bucket-with-objects-cdk"
+import { BucketWithObjects } from "cdk-bucket-with-objects"
 import { Construct } from "constructs"
 
 export class BucketWithObjectsTestStack extends cdk.Stack {
