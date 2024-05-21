@@ -108,7 +108,7 @@ export class BucketWithObjects extends s3.Bucket {
 						})),
 						objects: this.#inlineBucketObjects,
 						invalidationActions: this.#deploymentActions
-							.filter(action => action instanceof CloudFrontDistributionInvalidationDeploymentAction)
+							.filter(action => (action as CloudFrontDistributionInvalidationDeploymentAction).distribution !== undefined)
 							.map(action => ({
 								distributionId: (action as CloudFrontDistributionInvalidationDeploymentAction).distribution.distributionId,
 								waitForCompletion: (action as CloudFrontDistributionInvalidationDeploymentAction).waitForCompletion
@@ -139,10 +139,10 @@ export class BucketWithObjects extends s3.Bucket {
 
 	addDeploymentAction(action: DeploymentAction) {
 		this.#deploymentActions.push(action)
-		if (action instanceof CloudFrontDistributionInvalidationDeploymentAction) {
+		if ((action as CloudFrontDistributionInvalidationDeploymentAction).distribution !== undefined) {
 			this.#handlerRole.addToPolicy(new iam.PolicyStatement({
 				actions: ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
-				resources: [getDistributionArn(action.distribution)]
+				resources: [getDistributionArn((action as CloudFrontDistributionInvalidationDeploymentAction).distribution)]
 			}))
 		}
 	}
