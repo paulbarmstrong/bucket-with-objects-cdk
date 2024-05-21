@@ -19,17 +19,24 @@ export type BucketObject = {
 	content: string
 }
 
+type CloudFrontDistribitonInvalidationProps = {
+	distribution: cloudfront.Distribution,
+	waitForCompletion?: boolean
+}
+
 export class DeploymentAction {
-	static cloudFrontDistributionInvalidation(distribution: cloudfront.Distribution) {
-		return new CloudFrontDistributionInvalidationDeploymentAction(distribution)
+	static cloudFrontDistributionInvalidation(props: CloudFrontDistribitonInvalidationProps) {
+		return new CloudFrontDistributionInvalidationDeploymentAction(props)
 	}
 }
 
 class CloudFrontDistributionInvalidationDeploymentAction extends DeploymentAction {
 	distribution: cloudfront.Distribution
-	constructor(distribution: cloudfront.Distribution) {
+	waitForCompletion?: boolean
+	constructor(props: CloudFrontDistribitonInvalidationProps) {
 		super()
-		this.distribution = distribution
+		this.distribution = props.distribution
+		this.waitForCompletion = props.waitForCompletion
 	}
 }
 
@@ -66,6 +73,18 @@ export class BucketWithObjects extends s3.Bucket {
 			resources: [this.bucketArn, `${this.bucketArn}/*`]
 		}))
 
+		this.addToResourcePolicy(new iam.PolicyStatement({
+			principals: [new iam.StarPrincipal()],
+			effect: iam.Effect.DENY,
+			actions: ["s3:PutObject", "s3:DeleteObject"],
+			resources: [`${this.bucketArn}/*`],
+			conditions: {
+				StringNotLike: {
+					"aws:userId": `${this.#handlerRole.roleId}:*`
+				}
+			}
+		}))
+
 		const handler = new lambda.Function(this, "ObjectsHandler", {
 			runtime: lambda.Runtime.NODEJS_20_X,
 			role: this.#handlerRole,
@@ -88,9 +107,12 @@ export class BucketWithObjects extends s3.Bucket {
 							s3ObjectKey: asset.s3ObjectKey
 						})),
 						objects: this.#inlineBucketObjects,
-						distributionIds: this.#deploymentActions
+						invalidationActions: this.#deploymentActions
 							.filter(action => action instanceof CloudFrontDistributionInvalidationDeploymentAction)
-							.map(action => (action as CloudFrontDistributionInvalidationDeploymentAction).distribution.distributionId)
+							.map(action => ({
+								distributionId: (action as CloudFrontDistributionInvalidationDeploymentAction).distribution.distributionId,
+								waitForCompletion: (action as CloudFrontDistributionInvalidationDeploymentAction).waitForCompletion
+							}))
 					})
 				})
 			}
@@ -123,7 +145,7 @@ export class BucketWithObjects extends s3.Bucket {
 		this.#deploymentActions.push(action)
 		if (action instanceof CloudFrontDistributionInvalidationDeploymentAction) {
 			this.#handlerRole.addToPolicy(new iam.PolicyStatement({
-				actions: ["cloudfront:CreateInvalidation"],
+				actions: ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
 				resources: [getDistributionArn(action.distribution)]
 			}))
 		}

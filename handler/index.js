@@ -4,7 +4,7 @@ import unzipper from "unzipper"
 import mime from "mime-types"
 import { S3Client } from "@aws-sdk/client-s3"
 import { S3SyncClient } from  "s3-sync-client"
-import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-cloudfront"
+import { CloudFrontClient, CreateInvalidationCommand, GetInvalidationCommand } from "@aws-sdk/client-cloudfront"
 
 export async function handler(event) {
 	try {
@@ -87,10 +87,10 @@ async function deploy(event) {
 		})
 	})
 
-	await Promise.all(props.distributionIds.map(async distributionId => {
-		console.log(`Creating cloudfront invalidation for distribution ${distributionId}...`)
-		await cloudFrontClient.send(new CreateInvalidationCommand({
-			DistributionId: distributionId,
+	await Promise.all(props.invalidationActions.map(async invalidationAction => {
+		console.log(`Creating cloudfront invalidation for distribution ${invalidationAction.distributionId}...`)
+		const createRes = await cloudFrontClient.send(new CreateInvalidationCommand({
+			DistributionId: invalidationAction.distributionId,
 			InvalidationBatch: {
 				Paths: {
 					Quantity: 1,
@@ -99,6 +99,23 @@ async function deploy(event) {
 				CallerReference: Date.now().toString(),
 			}
 		}))
+		if (invalidationAction.waitForCompletion) {
+			console.log(`Waiting for invalidation ${createRes.Invalidation.Id} to complete...`)
+			let status = createRes.Invalidation.Status
+			while (status !== "Completed") {
+				await sleep(1000)
+				try {
+					const res = await cloudFrontClient.send(new GetInvalidationCommand({
+						DistributionId: invalidationAction.distributionId,
+						Id: createRes.Invalidation.Id
+					}))
+					status = res.Invalidation.Status
+				} catch (error) {
+					if (error.name === "NoSuchInvalidation") status = undefined
+					else throw error
+				}
+			}
+		}
 	}))
 }
 
@@ -118,4 +135,8 @@ function getFrequencies(list) {
 		map.set(item, existingCount + 1 )
 	}
 	return map
+}
+
+async function sleep(ms) {
+	return new Promise((resolve) => setTimeout(() => resolve(), ms))
 }
