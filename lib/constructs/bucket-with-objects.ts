@@ -19,13 +19,13 @@ export type BucketObject = {
 	content: string
 }
 
-type CloudFrontDistribitonInvalidationProps = {
+type CloudFrontDistributionInvalidationDeploymentActionProps = {
 	distribution: cloudfront.Distribution,
 	waitForCompletion?: boolean
 }
 
 export class DeploymentAction {
-	static cloudFrontDistributionInvalidation(props: CloudFrontDistribitonInvalidationProps) {
+	static cloudFrontDistributionInvalidation(props: CloudFrontDistributionInvalidationDeploymentActionProps) {
 		return new CloudFrontDistributionInvalidationDeploymentAction(props)
 	}
 }
@@ -33,7 +33,7 @@ export class DeploymentAction {
 class CloudFrontDistributionInvalidationDeploymentAction extends DeploymentAction {
 	distribution: cloudfront.Distribution
 	waitForCompletion?: boolean
-	constructor(props: CloudFrontDistribitonInvalidationProps) {
+	constructor(props: CloudFrontDistributionInvalidationDeploymentActionProps) {
 		super()
 		this.distribution = props.distribution
 		this.waitForCompletion = props.waitForCompletion
@@ -103,7 +103,7 @@ export class BucketWithObjects extends s3.Bucket {
 						bucketUrl: `s3://${this.bucketName}`,
 						assets: this.#assets.map(asset => ({
 							hash: asset.assetHash,
-							s3ObjectUrl: asset.s3ObjectUrl,
+							s3BucketName: asset.s3BucketName,
 							s3ObjectKey: asset.s3ObjectKey
 						})),
 						objects: this.#inlineBucketObjects,
@@ -132,12 +132,8 @@ export class BucketWithObjects extends s3.Bucket {
 		}
 		this.#assets.push(asset)
 		this.#handlerRole.addToPolicy(new iam.PolicyStatement({
-			actions: [
-				"s3:ListBucket",
-				"s3:GetObject",
-				"s3:GetObjectAcl",
-			],
-			resources: [asset.bucket.bucketArn, `${asset.bucket.bucketArn}/*`]
+			actions: ["s3:GetObject"],
+			resources: [`${asset.bucket.bucketArn}/*`]
 		}))
 	}
 

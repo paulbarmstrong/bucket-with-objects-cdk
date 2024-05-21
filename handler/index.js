@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import unzipper from "unzipper"
 import mime from "mime-types"
-import { S3Client } from "@aws-sdk/client-s3"
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { S3SyncClient } from  "s3-sync-client"
 import { CloudFrontClient, CreateInvalidationCommand, GetInvalidationCommand } from "@aws-sdk/client-cloudfront"
 
@@ -39,7 +39,8 @@ async function sendResponse(status, reason, event) {
 }
 
 async function deploy(event) {
-	const s3SyncClient = new S3SyncClient({ client: new S3Client({}) })
+	const s3Client = new S3Client({})
+	const s3SyncClient = new S3SyncClient({ client: s3Client })
 	const cloudFrontClient = new CloudFrontClient({})
 
 	const props = event.ResourceProperties.props
@@ -54,15 +55,21 @@ async function deploy(event) {
 		const files = (await Promise.all([
 			...props.assets.map(async asset => {
 				const localAssetPath = path.join(workArea, asset.hash)
-				console.log(`Syncing from ${asset.s3ObjectUrl} to ${localAssetPath}...`)
-				await s3SyncClient.sync(asset.s3ObjectUrl, localAssetPath)
+				await fs.promises.mkdir(localAssetPath, { recursive: true })
+				console.log(`Getting object ${asset.s3BucketName}/${asset.s3ObjectKey} to ${path.join(localAssetPath, asset.s3ObjectKey)}...`)
+				const zipBody = (await s3Client.send(new GetObjectCommand({
+					Bucket: asset.s3BucketName,
+					Key: asset.s3ObjectKey
+				}))).Body
+				await fs.promises.writeFile(path.join(localAssetPath, asset.s3ObjectKey), zipBody)
 	
 				console.log(`Unzipping ${path.join(localAssetPath, asset.s3ObjectKey)} to ${path.join(localAssetPath, "unzipped")}...`)
 				await unzip(path.join(localAssetPath, asset.s3ObjectKey), path.join(localAssetPath, "unzipped"))
+				const files = await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true })
 	
-				console.log(`Copying ${path.join(localAssetPath, "unzipped")} to ${finalPath}...`)
-				await fs.promises.cp(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
-				return await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true })
+				console.log(`Moving ${path.join(localAssetPath, "unzipped")} to ${finalPath}...`)
+				await fs.promises.rename(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
+				return files
 			}),
 			...props.objects.map(async object => {
 				console.log(`Adding object ${object.key} to ${finalPath}...`)
