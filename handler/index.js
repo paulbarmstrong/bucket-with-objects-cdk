@@ -3,7 +3,7 @@ import path from "path"
 import unzipper from "unzipper"
 import mime from "mime-types"
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import { S3SyncClient } from  "s3-sync-client"
+import { S3SyncClient } from "s3-sync-client"
 import { CloudFrontClient, CreateInvalidationCommand, GetInvalidationCommand } from "@aws-sdk/client-cloudfront"
 
 export async function handler(event) {
@@ -65,7 +65,9 @@ async function deploy(event) {
 	
 				console.log(`Unzipping ${path.join(localAssetPath, asset.s3ObjectKey)} to ${path.join(localAssetPath, "unzipped")}...`)
 				await unzip(path.join(localAssetPath, asset.s3ObjectKey), path.join(localAssetPath, "unzipped"))
-				const files = await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true })
+				const files = (await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true, withFileTypes: true }))
+					.filter(file => !file.isDirectory())
+					.map(file => file.name)
 	
 				console.log(`Moving ${path.join(localAssetPath, "unzipped")} to ${finalPath}...`)
 				await fs.promises.cp(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
