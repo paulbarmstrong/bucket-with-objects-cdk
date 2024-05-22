@@ -14,7 +14,7 @@ export type BucketWithObjectsProps = Partial<Omit<Omit<s3.BucketProps, "removalP
 	deploymentLogGroup?: logs.ILogGroup
 }
 
-export type BucketObject = {
+type InlineBucketObject = {
 	key: string
 	content: string
 }
@@ -25,6 +25,7 @@ type CloudFrontDistributionInvalidationDeploymentActionProps = {
 }
 
 export class DeploymentAction {
+	#classname = "DeploymentAction"
 	static cloudFrontDistributionInvalidation(props: CloudFrontDistributionInvalidationDeploymentActionProps) {
 		return new CloudFrontDistributionInvalidationDeploymentAction(props)
 	}
@@ -41,7 +42,7 @@ class CloudFrontDistributionInvalidationDeploymentAction extends DeploymentActio
 }
 
 export class BucketWithObjects extends s3.Bucket {
-	#inlineBucketObjects: Array<BucketObject>
+	#inlineBucketObjects: Array<InlineBucketObject>
 	#assets: Array<s3_assets.Asset>
 	#deploymentActions: Array<DeploymentAction>
 	#handlerRole: iam.Role
@@ -119,21 +120,21 @@ export class BucketWithObjects extends s3.Bucket {
 		})
 	}
 
-	addObject(object: BucketObject) {
-		if (this.#inlineBucketObjects.find(x => x.key === object.key)) {
-			throw new Error(`Cannot add object with duplicate key ${object.key} to ${this.node.id}.`)
+	addObject(props: { key: string, content: string }) {
+		if (this.#inlineBucketObjects.find(x => x.key === props.key)) {
+			throw new Error(`Cannot add object with duplicate key ${props.key} to ${this.node.id}.`)
 		}
-		this.#inlineBucketObjects.push(object)
+		this.#inlineBucketObjects.push(props)
 	}
 
-	addObjectsFromAsset(asset: s3_assets.Asset) {
-		if (this.#assets.find(x => x.assetHash === asset.assetHash)) {
-			throw new Error(`Cannot add objects from asset ${asset.assetHash} to ${this.node.id} twice.`)
+	addObjectsFromAsset(props: { asset: s3_assets.Asset }) {
+		if (this.#assets.find(x => x.assetHash === props.asset.assetHash)) {
+			throw new Error(`Cannot add objects from asset ${props.asset.assetHash} to ${this.node.id} twice.`)
 		}
-		this.#assets.push(asset)
+		this.#assets.push(props.asset)
 		this.#handlerRole.addToPolicy(new iam.PolicyStatement({
 			actions: ["s3:GetObject"],
-			resources: [`${asset.bucket.bucketArn}/*`]
+			resources: [`${props.asset.bucket.bucketArn}/*`]
 		}))
 	}
 
