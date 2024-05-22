@@ -68,7 +68,8 @@ async function deploy(event) {
 				const files = await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true })
 	
 				console.log(`Moving ${path.join(localAssetPath, "unzipped")} to ${finalPath}...`)
-				await fs.promises.rename(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
+				await fs.promises.cp(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
+				await fs.promises.rm(path.join(localAssetPath, "unzipped"), { recursive: true })
 				return files
 			}),
 			...props.objects.map(async object => {
