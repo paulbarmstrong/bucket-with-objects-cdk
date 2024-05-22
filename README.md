@@ -29,7 +29,9 @@ export class BucketWithObjectsTestStack extends cdk.Stack {
 		const bucket = new BucketWithObjects(this, "Bucket", {
 			bucketName: "bucket-with-objects-test-bucket"
 		})
-		bucket.addObjectsFromAsset(new s3_assets.Asset(this, "TestAsset", { path: "./test-asset" }))
+		bucket.addObjectsFromAsset({
+			asset: new s3_assets.Asset(this, "TestAsset", { path: "./test-asset" })
+		})
 		bucket.addObject({
 			key: "config.json",
 			content: JSON.stringify({ "bucketArn": bucket.bucketArn })
