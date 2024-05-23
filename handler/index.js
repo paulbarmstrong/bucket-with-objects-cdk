@@ -62,16 +62,17 @@ async function deploy(event) {
 					Key: asset.s3ObjectKey
 				}))).Body
 				await fs.promises.writeFile(path.join(localAssetPath, asset.s3ObjectKey), zipBody)
-	
+
 				console.log(`Unzipping ${path.join(localAssetPath, asset.s3ObjectKey)} to ${path.join(localAssetPath, "unzipped")}...`)
 				await unzip(path.join(localAssetPath, asset.s3ObjectKey), path.join(localAssetPath, "unzipped"))
+				await fs.promises.rm(path.join(localAssetPath, asset.s3ObjectKey), { recursive: true })
 				const files = (await fs.promises.readdir(path.join(localAssetPath, "unzipped"), { recursive: true, withFileTypes: true }))
 					.filter(file => !file.isDirectory())
 					.map(file => file.name)
-	
+
 				console.log(`Moving ${path.join(localAssetPath, "unzipped")} to ${finalPath}...`)
 				await fs.promises.cp(path.join(localAssetPath, "unzipped"), finalPath, { recursive: true })
-				await fs.promises.rm(path.join(localAssetPath, "unzipped"), { recursive: true })
+				await fs.promises.rm(path.join(localAssetPath), { recursive: true })
 				return files
 			}),
 			...props.objects.map(async object => {
@@ -96,6 +97,7 @@ async function deploy(event) {
 			ContentType: mime.lookup(input.Key) || "text/html",
 		})
 	})
+	await fs.promises.rm(workArea, { recursive: true })
 
 	await Promise.all(props.invalidationActions.map(async invalidationAction => {
 		console.log(`Creating cloudfront invalidation for distribution ${invalidationAction.distributionId}...`)
