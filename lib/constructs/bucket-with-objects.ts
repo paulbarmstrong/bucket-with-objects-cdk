@@ -91,7 +91,8 @@ export class BucketWithObjects extends s3.Bucket {
 			role: this.#handlerRole,
 			code: lambda.Code.fromAsset(codePackagePath),
 			handler: "index.handler",
-			timeout: cdk.Duration.seconds(60),
+			timeout: cdk.Duration.seconds(900),
+			ephemeralStorageSize: cdk.Size.mebibytes(10240),
 			logGroup: props.deploymentLogGroup
 		})
 
