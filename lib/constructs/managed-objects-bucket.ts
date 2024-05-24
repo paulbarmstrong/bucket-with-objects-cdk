@@ -56,7 +56,7 @@ class CloudFrontDistributionInvalidationObjectChangeAction extends ObjectChangeA
 
 /** 
  * An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
- * `addObject` and `addObjectsFromAsset` methods.
+ * `addManagedObject` and `addManagedObjectsFromAsset` methods.
  * 
  * The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
  * resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
@@ -154,7 +154,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 
 	/** Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
 	 * like resource ARNs can be used here. */
-	addObject(props: {
+	addManagedObject(props: {
 		/** S3 object key for the object. */
 		key: string,
 		/** Content to be stored within the S3 object. */
@@ -171,10 +171,11 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	 * For example:
 	 * 
 	 * ```
-	 * bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" }) })
+	 * import { Asset } from "aws-cdk-lib/aws-s3-assets"
+	 * bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })
 	 * ```
 	 */
-	addObjectsFromAsset(props: {
+	addManagedObjectsFromAsset(props: {
 		/** The [Asset](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html
 		 * ) to be added to the bucket. */
 		asset: s3_assets.Asset

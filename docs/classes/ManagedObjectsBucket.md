@@ -3,7 +3,7 @@
 # Class: ManagedObjectsBucket
 
 An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
-`addObject` and `addObjectsFromAsset` methods.
+`addManagedObject` and `addManagedObjectsFromAsset` methods.
 
 The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
 resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
@@ -29,9 +29,9 @@ always emptied and destroyed on removal.
 
 ### Methods
 
+- [addManagedObject](ManagedObjectsBucket.md#addmanagedobject)
 - [addManagedObjectChangeAction](ManagedObjectsBucket.md#addmanagedobjectchangeaction)
-- [addObject](ManagedObjectsBucket.md#addobject)
-- [addObjectsFromAsset](ManagedObjectsBucket.md#addobjectsfromasset)
+- [addManagedObjectsFromAsset](ManagedObjectsBucket.md#addmanagedobjectsfromasset)
 
 ## Constructors
 
@@ -61,31 +61,9 @@ s3.Bucket.constructor
 
 ## Methods
 
-### addManagedObjectChangeAction
+### addManagedObject
 
-▸ **addManagedObjectChangeAction**(`action`): `void`
-
-Add an action to be performed when objects in the bucket are changed.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `action` | [`ObjectChangeAction`](ObjectChangeAction.md) |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[constructs/managed-objects-bucket.ts:193](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L193)
-
-___
-
-### addObject
-
-▸ **addObject**(`props`): `void`
+▸ **addManagedObject**(`props`): `void`
 
 Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
 like resource ARNs can be used here.
@@ -108,16 +86,39 @@ like resource ARNs can be used here.
 
 ___
 
-### addObjectsFromAsset
+### addManagedObjectChangeAction
 
-▸ **addObjectsFromAsset**(`props`): `void`
+▸ **addManagedObjectChangeAction**(`action`): `void`
+
+Add an action to be performed when objects in the bucket are changed.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `action` | [`ObjectChangeAction`](ObjectChangeAction.md) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[constructs/managed-objects-bucket.ts:194](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L194)
+
+___
+
+### addManagedObjectsFromAsset
+
+▸ **addManagedObjectsFromAsset**(`props`): `void`
 
 Add objects to the bucket based on an [Asset](
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html).
 For example:
 
 ```
-bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" }) })
+import { Asset } from "aws-cdk-lib/aws-s3-assets"
+bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })
 ```
 
 #### Parameters
@@ -133,4 +134,4 @@ bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "MyAsset", { path:
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:177](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L177)
+[constructs/managed-objects-bucket.ts:178](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L178)
