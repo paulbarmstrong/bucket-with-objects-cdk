@@ -1,1 +1,1 @@
-export * from "./lib/constructs/bucket-with-objects"
+export * from "./lib/constructs/managed-objects-bucket"

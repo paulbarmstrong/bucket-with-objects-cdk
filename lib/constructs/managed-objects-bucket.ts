@@ -10,7 +10,7 @@ import * as iam from "aws-cdk-lib/aws-iam"
 import * as logs from "aws-cdk-lib/aws-logs"
 import * as s3_assets from "aws-cdk-lib/aws-s3-assets"
 
-export type BucketWithObjectsProps = Partial<Omit<Omit<s3.BucketProps, "removalPolicy">, "autoDeleteObjects">> & {
+export type ManagedObjectsBucketProps = Partial<Omit<Omit<s3.BucketProps, "removalPolicy">, "autoDeleteObjects">> & {
 	deploymentLogGroup?: logs.ILogGroup
 }
 
@@ -41,12 +41,12 @@ class CloudFrontDistributionInvalidationDeploymentAction extends DeploymentActio
 	}
 }
 
-export class BucketWithObjects extends s3.Bucket {
+export class ManagedObjectsBucket extends s3.Bucket {
 	#inlineBucketObjects: Array<InlineBucketObject>
 	#assets: Array<s3_assets.Asset>
 	#deploymentActions: Array<DeploymentAction>
 	#handlerRole: iam.Role
-	constructor(scope: Construct, id: string, props: BucketWithObjectsProps) {
+	constructor(scope: Construct, id: string, props: ManagedObjectsBucketProps) {
 		super(scope, id, {
 			removalPolicy: cdk.RemovalPolicy.DESTROY,
 			...props
@@ -60,7 +60,7 @@ export class BucketWithObjects extends s3.Bucket {
 			execSync("npm install", { cwd: codePackagePath })
 		}
 
-		this.#handlerRole = new iam.Role(this, "ObjectsHandlerRole", {
+		this.#handlerRole = new iam.Role(this, "ObjectsManagerRole", {
 			managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")],
 			assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com")
 		})
@@ -86,7 +86,7 @@ export class BucketWithObjects extends s3.Bucket {
 			}
 		}))
 
-		const handler = new lambda.Function(this, "ObjectsHandler", {
+		const handler = new lambda.Function(this, "ObjectsManager", {
 			runtime: lambda.Runtime.NODEJS_20_X,
 			role: this.#handlerRole,
 			code: lambda.Code.fromAsset(codePackagePath),
@@ -97,7 +97,7 @@ export class BucketWithObjects extends s3.Bucket {
 		})
 
 		new cdk.CustomResource(this, "Objects", {
-			resourceType: "Custom::BucketObjects",
+			resourceType: "Custom::ManagedBucketObjects",
 			serviceToken: handler.functionArn,
 			properties: {
 				props: cdk.Lazy.any({
