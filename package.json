@@ -1,6 +1,6 @@
 {
 	"name": "cdk-managed-objects-bucket",
-	"version": "0.1.3-alpha",
+	"version": "0.1.4-alpha",
 	"author": "Paul B. Armstrong",
 	"description": "A CDK construct representing a bucket and the objects within it, which can be defined by an Asset or directly in the CDK. It extends the Bucket construct.",
 	"main": "dist/index",

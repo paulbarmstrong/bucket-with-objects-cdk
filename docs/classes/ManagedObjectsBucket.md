@@ -104,7 +104,7 @@ Add an action to be performed when objects in the bucket are changed.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:194](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L194)
+[constructs/managed-objects-bucket.ts:191](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L191)
 
 ___
 
@@ -116,10 +116,7 @@ Add objects to the bucket based on an [Asset](
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html).
 For example:
 
-```
-import { Asset } from "aws-cdk-lib/aws-s3-assets"
-bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })
-```
+`bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
 
 #### Parameters
 
@@ -134,4 +131,4 @@ bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: ".
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:178](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L178)
+[constructs/managed-objects-bucket.ts:175](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L175)

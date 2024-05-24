@@ -117,7 +117,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 			}
 		}))
 
-		const handler = new lambda.Function(this, "ObjectManager", {
+		const handler = new lambda.Function(this, "ObjectManagerFunction", {
 			runtime: lambda.Runtime.NODEJS_20_X,
 			role: this.#handlerRole,
 			code: lambda.Code.fromAsset(codePackagePath),
@@ -170,10 +170,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	 * https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html).
 	 * For example:
 	 * 
-	 * ```
-	 * import { Asset } from "aws-cdk-lib/aws-s3-assets"
-	 * bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })
-	 * ```
+	 * `bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
 	 */
 	addManagedObjectsFromAsset(props: {
 		/** The [Asset](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html

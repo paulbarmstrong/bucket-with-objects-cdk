@@ -20,12 +20,12 @@ https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_deployment.Bucket
 ) include:
 
 1. ManagedObjectsBucket has much stronger ownership of its objects in the bucket since it
-provides a layer of encapsulation around the bucket itself and does not let any other
+puts a layer of encapsulation around the bucket itself and does not let any other
 identities mutate objects within the bucket. That eliminates the possibility of the bucket's
 objects being mistaken as anything other than objects defined and managed by mechanisms within
 the CDK.
 2. ManagedObjectsBucket allows adding objects based on an [Asset](
-https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html). That allows
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html). That
 gives consumers more configurability than only allowing a local path to be specified. Asset
 allows consumers to, for example, run some code to bundle their local files as a part of the CDK
 synthesis process.
@@ -53,14 +53,14 @@ import * as s3_assets from "aws-cdk-lib/aws-s3-assets"
 import { ManagedObjectsBucket } from "cdk-managed-objects-bucket"
 import { Construct } from "constructs"
 
-export class ManagedObjectsBucketTestStack extends cdk.Stack {
+export class MyStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
 		super(scope, id, props)
 		const bucket = new ManagedObjectsBucket(this, "Bucket", {
-			bucketName: "managed-objects-bucket-test-bucket"
+			bucketName: "my-example-managed-objects-bucket"
 		})
 		bucket.addManagedObjectsFromAsset({
-			asset: new s3_assets.Asset(this, "TestAsset", { path: "./test-asset" })
+			asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" })
 		})
 		bucket.addManagedObject({
 			key: "config.json",
