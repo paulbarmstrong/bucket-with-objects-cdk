@@ -1,1 +1,0 @@
-export * from "./lib/constructs/managed-objects-bucket"

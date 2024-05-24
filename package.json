@@ -7,7 +7,8 @@
 	"typings": "dist/index",
 	"scripts": {
 		"build": "tsc",
-		"prepublishOnly": "npm run build"
+		"generate-docs": "npx typedoc --readme none --entryDocument index.md --githubPages false --sourceLinkTemplate 'https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/{path}#L{line}' --excludeExternals --plugin typedoc-plugin-markdown --out docs lib/index.ts",
+		"prepublishOnly": "npm run build && npm run generate-docs"
 	},
 	"license": "MIT",
 	"repository": {
@@ -15,7 +16,9 @@
 		"url": "https://github.com/paulbarmstrong/cdk-managed-objects-bucket.git"
 	},
 	"devDependencies": {
-		"typescript": "^5.4.5"
+		"typescript": "^5.4.5",
+		"typedoc": "^0.25.4",
+		"typedoc-plugin-markdown": "^3.17.1"
 	},
 	"peerDependencies": {
 		"aws-cdk-lib": "^2.140.0",
