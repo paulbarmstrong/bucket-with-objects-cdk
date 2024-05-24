@@ -78,7 +78,7 @@ async function deploy(event) {
 			...props.objects.map(async object => {
 				console.log(`Adding object ${object.key} to ${finalPath}...`)
 				await fs.promises.mkdir(path.join(finalPath, object.key, ".."), { recursive: true })
-				await fs.promises.writeFile(path.join(finalPath, object.key), object.content)
+				await fs.promises.writeFile(path.join(finalPath, object.key), object.body)
 				return [object.key]
 			})
 		])).flat()

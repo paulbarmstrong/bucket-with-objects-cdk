@@ -29,7 +29,7 @@ always emptied and destroyed on removal.
 
 ### Methods
 
-- [addDeploymentAction](ManagedObjectsBucket.md#adddeploymentaction)
+- [addManagedObjectChangeAction](ManagedObjectsBucket.md#addmanagedobjectchangeaction)
 - [addObject](ManagedObjectsBucket.md#addobject)
 - [addObjectsFromAsset](ManagedObjectsBucket.md#addobjectsfromasset)
 
@@ -57,13 +57,13 @@ s3.Bucket.constructor
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:84](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L84)
+[constructs/managed-objects-bucket.ts:80](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L80)
 
 ## Methods
 
-### addDeploymentAction
+### addManagedObjectChangeAction
 
-▸ **addDeploymentAction**(`action`): `void`
+▸ **addManagedObjectChangeAction**(`action`): `void`
 
 Add an action to be performed when objects in the bucket are changed.
 
@@ -71,7 +71,7 @@ Add an action to be performed when objects in the bucket are changed.
 
 | Name | Type |
 | :------ | :------ |
-| `action` | [`DeploymentAction`](DeploymentAction.md) |
+| `action` | [`ObjectChangeAction`](ObjectChangeAction.md) |
 
 #### Returns
 
@@ -79,7 +79,7 @@ Add an action to be performed when objects in the bucket are changed.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:197](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L197)
+[constructs/managed-objects-bucket.ts:193](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L193)
 
 ___
 
@@ -95,7 +95,7 @@ like resource ARNs can be used here.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `props` | `Object` | - |
-| `props.content` | `string` | Content to be stored within the S3 object. |
+| `props.body` | `string` | Content to be stored within the S3 object. |
 | `props.key` | `string` | S3 object key for the object. |
 
 #### Returns
@@ -104,7 +104,7 @@ like resource ARNs can be used here.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:161](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L161)
+[constructs/managed-objects-bucket.ts:157](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L157)
 
 ___
 
@@ -117,7 +117,7 @@ https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.htm
 For example:
 
 ```
-bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "TestAsset", { path: "./my-local-files" }) })
+bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" }) })
 ```
 
 #### Parameters
@@ -133,4 +133,4 @@ bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "TestAsset", { pat
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:181](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L181)
+[constructs/managed-objects-bucket.ts:177](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L177)

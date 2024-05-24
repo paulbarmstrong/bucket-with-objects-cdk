@@ -18,7 +18,7 @@ export type ManagedObjectsBucketProps = Partial<Omit<Omit<s3.BucketProps, "remov
 /** @hidden */
 type InlineBucketObject = {
 	key: string,
-	content: string
+	body: string
 }
 
 type CloudFrontDistributionInvalidationObjectChangeActionProps = {
@@ -158,7 +158,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 		/** S3 object key for the object. */
 		key: string,
 		/** Content to be stored within the S3 object. */
-		content: string
+		body: string
 	}) {
 		if (this.#inlineBucketObjects.find(x => x.key === props.key)) {
 			throw new Error(`Cannot add object with duplicate key ${props.key} to ${this.node.id}.`)

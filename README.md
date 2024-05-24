@@ -64,7 +64,7 @@ export class ManagedObjectsBucketTestStack extends cdk.Stack {
 		})
 		bucket.addObject({
 			key: "config.json",
-			content: JSON.stringify({ "bucketArn": bucket.bucketArn })
+			body: JSON.stringify({ "bucketArn": bucket.bucketArn })
 		})
 	}
 }

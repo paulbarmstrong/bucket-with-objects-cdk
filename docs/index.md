@@ -6,8 +6,8 @@ cdk-managed-objects-bucket
 
 ### Classes
 
-- [DeploymentAction](classes/DeploymentAction.md)
 - [ManagedObjectsBucket](classes/ManagedObjectsBucket.md)
+- [ObjectChangeAction](classes/ObjectChangeAction.md)
 
 ### Type Aliases
 
