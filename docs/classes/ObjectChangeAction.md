@@ -12,7 +12,7 @@ An action to be performed when changes are made to the objects in the bucket.
 
 ### Methods
 
-- [cloudFrontDistributionInvalidation](ObjectChangeAction.md#cloudfrontdistributioninvalidation)
+- [cloudFrontInvalidation](ObjectChangeAction.md#cloudfrontinvalidation)
 
 ## Constructors
 
@@ -26,9 +26,9 @@ An action to be performed when changes are made to the objects in the bucket.
 
 ## Methods
 
-### cloudFrontDistributionInvalidation
+### cloudFrontInvalidation
 
-▸ **cloudFrontDistributionInvalidation**(`props`): `CloudFrontDistributionInvalidationObjectChangeAction`
+▸ **cloudFrontInvalidation**(`props`): `CloudFrontInvalidationObjectChangeAction`
 
 ObjectChangeAction for performing a CloudFront invalidation after objects
 in the bucket have changed.
@@ -37,11 +37,11 @@ in the bucket have changed.
 
 | Name | Type |
 | :------ | :------ |
-| `props` | `CloudFrontDistributionInvalidationObjectChangeActionProps` |
+| `props` | `CloudFrontInvalidationObjectChangeActionProps` |
 
 #### Returns
 
-`CloudFrontDistributionInvalidationObjectChangeAction`
+`CloudFrontInvalidationObjectChangeAction`
 
 #### Defined in
 

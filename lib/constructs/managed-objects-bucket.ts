@@ -21,8 +21,8 @@ type InlineBucketObject = {
 	body: string
 }
 
-type CloudFrontDistributionInvalidationObjectChangeActionProps = {
-	/** CloudFront Distribution to submit an invalidation for. */
+type CloudFrontInvalidationObjectChangeActionProps = {
+	/** CloudFront Distribution to create an invalidation for. */
 	distribution: cloudfront.Distribution,
 	/** Whether to wait for the invalidation to be completed before allowing the CloudFormation
 	 * update to continue. @default false */
@@ -37,17 +37,17 @@ export abstract class ObjectChangeAction {
 	#classname = "ObjectChangeAction"
 	/** ObjectChangeAction for performing a CloudFront invalidation after objects
 	 * in the bucket have changed. */
-	static cloudFrontDistributionInvalidation(props: CloudFrontDistributionInvalidationObjectChangeActionProps) {
-		return new CloudFrontDistributionInvalidationObjectChangeAction(props)
+	static cloudFrontInvalidation(props: CloudFrontInvalidationObjectChangeActionProps) {
+		return new CloudFrontInvalidationObjectChangeAction(props)
 	}
 }
 
 /** ObjectChangeAction for performing an invalidation on a CloudFront distribution after objects
  * in the bucket have changed. */
-class CloudFrontDistributionInvalidationObjectChangeAction extends ObjectChangeAction {
+class CloudFrontInvalidationObjectChangeAction extends ObjectChangeAction {
 	distribution: cloudfront.Distribution
 	waitForCompletion?: boolean
-	constructor(props: CloudFrontDistributionInvalidationObjectChangeActionProps) {
+	constructor(props: CloudFrontInvalidationObjectChangeActionProps) {
 		super()
 		this.distribution = props.distribution
 		this.waitForCompletion = props.waitForCompletion
@@ -141,10 +141,10 @@ export class ManagedObjectsBucket extends s3.Bucket {
 						})),
 						objects: this.#inlineBucketObjects,
 						invalidationActions: this.#ObjectChangeActions
-							.filter(action => (action as CloudFrontDistributionInvalidationObjectChangeAction).distribution !== undefined)
+							.filter(action => (action as CloudFrontInvalidationObjectChangeAction).distribution !== undefined)
 							.map(action => ({
-								distributionId: (action as CloudFrontDistributionInvalidationObjectChangeAction).distribution.distributionId,
-								waitForCompletion: (action as CloudFrontDistributionInvalidationObjectChangeAction).waitForCompletion
+								distributionId: (action as CloudFrontInvalidationObjectChangeAction).distribution.distributionId,
+								waitForCompletion: (action as CloudFrontInvalidationObjectChangeAction).waitForCompletion
 							}))
 					})
 				})
@@ -193,10 +193,10 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	/** Add an action to be performed when objects in the bucket are changed. */
 	addManagedObjectChangeAction(action: ObjectChangeAction) {
 		this.#ObjectChangeActions.push(action)
-		if ((action as CloudFrontDistributionInvalidationObjectChangeAction).distribution !== undefined) {
+		if ((action as CloudFrontInvalidationObjectChangeAction).distribution !== undefined) {
 			this.#handlerRole.addToPolicy(new iam.PolicyStatement({
 				actions: ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
-				resources: [getDistributionArn((action as CloudFrontDistributionInvalidationObjectChangeAction).distribution)]
+				resources: [getDistributionArn((action as CloudFrontInvalidationObjectChangeAction).distribution)]
 			}))
 		}
 	}
