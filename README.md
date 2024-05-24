@@ -15,7 +15,7 @@ Objects can be defined by:
 1. An Asset, by calling addObjectsFromAsset.
 2. CDK code, by calling addObject.
 
-Benefits over [DeploymentBucket](
+Benefits over [BucketDeployment](
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_deployment.BucketDeployment.html
 ) include:
 

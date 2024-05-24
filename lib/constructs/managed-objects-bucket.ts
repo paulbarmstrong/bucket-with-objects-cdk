@@ -21,7 +21,7 @@ type InlineBucketObject = {
 	content: string
 }
 
-type CloudFrontDistributionInvalidationDeploymentActionProps = {
+type CloudFrontDistributionInvalidationObjectChangeActionProps = {
 	/** CloudFront Distribution to submit an invalidation for. */
 	distribution: cloudfront.Distribution,
 	/** Whether to wait for the invalidation to be completed before allowing the CloudFormation
@@ -32,26 +32,22 @@ type CloudFrontDistributionInvalidationDeploymentActionProps = {
 /** 
  * An action to be performed when changes are made to the objects in the bucket.
  */
-export class DeploymentAction {
+export abstract class ObjectChangeAction {
 	/** @hidden */
-	#classname = "DeploymentAction"
-	/** @hidden */
-	constructor() {
-		throw new Error("Cannot instantiate DeploymentAction directly.")
-	}
-	/** DeploymentAction for performing an invalidation on a CloudFront distribution after objects
+	#classname = "ObjectChangeAction"
+	/** ObjectChangeAction for performing a CloudFront invalidation after objects
 	 * in the bucket have changed. */
-	static cloudFrontDistributionInvalidation(props: CloudFrontDistributionInvalidationDeploymentActionProps) {
-		return new CloudFrontDistributionInvalidationDeploymentAction(props)
+	static cloudFrontDistributionInvalidation(props: CloudFrontDistributionInvalidationObjectChangeActionProps) {
+		return new CloudFrontDistributionInvalidationObjectChangeAction(props)
 	}
 }
 
-/** DeploymentAction for performing an invalidation on a CloudFront distribution after objects
+/** ObjectChangeAction for performing an invalidation on a CloudFront distribution after objects
  * in the bucket have changed. */
-class CloudFrontDistributionInvalidationDeploymentAction extends DeploymentAction {
+class CloudFrontDistributionInvalidationObjectChangeAction extends ObjectChangeAction {
 	distribution: cloudfront.Distribution
 	waitForCompletion?: boolean
-	constructor(props: CloudFrontDistributionInvalidationDeploymentActionProps) {
+	constructor(props: CloudFrontDistributionInvalidationObjectChangeActionProps) {
 		super()
 		this.distribution = props.distribution
 		this.waitForCompletion = props.waitForCompletion
@@ -78,7 +74,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	/** @hidden */
 	#assets: Array<s3_assets.Asset>
 	/** @hidden */
-	#deploymentActions: Array<DeploymentAction>
+	#ObjectChangeActions: Array<ObjectChangeAction>
 	/** @hidden */
 	#handlerRole: iam.Role
 	constructor(scope: Construct, id: string, props: ManagedObjectsBucketProps) {
@@ -88,9 +84,9 @@ export class ManagedObjectsBucket extends s3.Bucket {
 		})
 		this.#inlineBucketObjects = []
 		this.#assets = []
-		this.#deploymentActions = []
+		this.#ObjectChangeActions = []
 
-		const codePackagePath = path.join(__dirname, "..", "..", "..", "handler")
+		const codePackagePath = path.join(__dirname, "..", "..", "handler")
 		if (!readdirSync(codePackagePath).includes("node_modules")) {
 			execSync("npm install", { cwd: codePackagePath })
 		}
@@ -144,11 +140,11 @@ export class ManagedObjectsBucket extends s3.Bucket {
 							s3ObjectKey: asset.s3ObjectKey
 						})),
 						objects: this.#inlineBucketObjects,
-						invalidationActions: this.#deploymentActions
-							.filter(action => (action as CloudFrontDistributionInvalidationDeploymentAction).distribution !== undefined)
+						invalidationActions: this.#ObjectChangeActions
+							.filter(action => (action as CloudFrontDistributionInvalidationObjectChangeAction).distribution !== undefined)
 							.map(action => ({
-								distributionId: (action as CloudFrontDistributionInvalidationDeploymentAction).distribution.distributionId,
-								waitForCompletion: (action as CloudFrontDistributionInvalidationDeploymentAction).waitForCompletion
+								distributionId: (action as CloudFrontDistributionInvalidationObjectChangeAction).distribution.distributionId,
+								waitForCompletion: (action as CloudFrontDistributionInvalidationObjectChangeAction).waitForCompletion
 							}))
 					})
 				})
@@ -175,7 +171,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	 * For example:
 	 * 
 	 * ```
-	 * bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "TestAsset", { path: "./my-local-files" }) })
+	 * bucket.addObjectsFromAsset({ asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" }) })
 	 * ```
 	 */
 	addObjectsFromAsset(props: {
@@ -194,12 +190,12 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	}
 
 	/** Add an action to be performed when objects in the bucket are changed. */
-	addDeploymentAction(action: DeploymentAction) {
-		this.#deploymentActions.push(action)
-		if ((action as CloudFrontDistributionInvalidationDeploymentAction).distribution !== undefined) {
+	addManagedObjectChangeAction(action: ObjectChangeAction) {
+		this.#ObjectChangeActions.push(action)
+		if ((action as CloudFrontDistributionInvalidationObjectChangeAction).distribution !== undefined) {
 			this.#handlerRole.addToPolicy(new iam.PolicyStatement({
 				actions: ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"],
-				resources: [getDistributionArn((action as CloudFrontDistributionInvalidationDeploymentAction).distribution)]
+				resources: [getDistributionArn((action as CloudFrontDistributionInvalidationObjectChangeAction).distribution)]
 			}))
 		}
 	}
