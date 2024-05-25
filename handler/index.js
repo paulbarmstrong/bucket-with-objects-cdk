@@ -9,7 +9,11 @@ import { CloudFrontClient, CreateInvalidationCommand, GetInvalidationCommand } f
 export async function handler(event) {
 	try {
 		console.log(JSON.stringify({ ...event, ResponseURL: "REDACTED" }))
-		await deploy(event)
+		if (process.env.SKIP === "true") {
+			console.log(`Skipping due to environment variable SKIP: ${JSON.stringify(process.env.SKIP)}.`)
+		} else {
+			await deploy(event)
+		}
 		await sendResponse("SUCCESS", undefined, event)
 	} catch (error) {
 		try {

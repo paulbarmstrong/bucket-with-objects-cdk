@@ -58,8 +58,8 @@ class CloudFrontInvalidationObjectChangeAction extends ObjectChangeAction {
  * An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
  * `addObject` and `addObjectsFromAsset` methods.
  * 
- * The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
- * resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
+ * The objects in the bucket are completely managed by CDK. A `Custom::ManagedBucketObjects`
+ * CFN resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
  * to align the bucket with the objects defined in the CDK definition. The objects in the
  * bucket are otherwise read-only.
  * 
@@ -67,6 +67,12 @@ class CloudFrontInvalidationObjectChangeAction extends ObjectChangeAction {
  * 
  * 1. `removalPolicy` and `autoDeleteObjects` are not configurable. ManagedObjectsBuckets are
  * always emptied and destroyed on removal.
+ * 
+ * In the event of ManagedObjectsBucket's `Custom::ManagedBucketObjects` custom resource having
+ * a persistent problem, you can unblock your stack by adding the following environment variable
+ * to the ObjectManagerFunction lambda function also inside the stack:
+ * 
+ * Key: `SKIP`, Value: `true`
  */
 export class ManagedObjectsBucket extends s3.Bucket {
 	/** @hidden */

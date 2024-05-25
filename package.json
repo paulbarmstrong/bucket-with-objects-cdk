@@ -1,6 +1,6 @@
 {
 	"name": "cdk-managed-objects-bucket",
-	"version": "0.1.5-alpha",
+	"version": "0.1.6-alpha",
 	"author": "Paul B. Armstrong",
 	"description": "A CDK construct representing a bucket and the objects within it, which can be defined by an Asset or directly in the CDK. It extends the Bucket construct.",
 	"main": "dist/index",
@@ -24,5 +24,5 @@
 		"aws-cdk-lib": "^2.140.0",
 		"constructs": "^10.3.0"
 	},
-	"keywords": ["cdk", "s3", "objects", "bucket", "construct", "deployment"]
+	"keywords": ["cdk", "s3", "objects", "bucket", "construct", "deployment", "experimental"]
 }

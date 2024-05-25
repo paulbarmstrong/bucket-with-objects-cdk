@@ -42,6 +42,12 @@ actually need to wait for it to complete.
 
 1. The total size of objects in the bucket must not exceed 5 gigabytes.
 
+### Installation
+
+```
+npm install cdk-managed-objects-bucket
+```
+
 ### Usage
 
 This is an example of how it may be used in a CDK app:

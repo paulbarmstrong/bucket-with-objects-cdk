@@ -5,8 +5,8 @@
 An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
 `addObject` and `addObjectsFromAsset` methods.
 
-The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
-resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
+The objects in the bucket are completely managed by CDK. A `Custom::ManagedBucketObjects`
+CFN resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
 to align the bucket with the objects defined in the CDK definition. The objects in the
 bucket are otherwise read-only.
 
@@ -14,6 +14,12 @@ ManagedObjectsBucket extends Bucket. All props from Bucket are allowed except:
 
 1. `removalPolicy` and `autoDeleteObjects` are not configurable. ManagedObjectsBuckets are
 always emptied and destroyed on removal.
+
+In the event of ManagedObjectsBucket's `Custom::ManagedBucketObjects` custom resource having
+a persistent problem, you can unblock your stack by adding the following environment variable
+to the ObjectManagerFunction lambda function also inside the stack:
+
+Key: `SKIP`, Value: `true`
 
 ## Hierarchy
 
@@ -57,7 +63,7 @@ s3.Bucket.constructor
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:80](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L80)
+[constructs/managed-objects-bucket.ts:86](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L86)
 
 ## Methods
 
@@ -82,7 +88,7 @@ like resource ARNs can be used here.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:157](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L157)
+[constructs/managed-objects-bucket.ts:163](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L163)
 
 ___
 
@@ -104,7 +110,7 @@ Add an action to be performed when objects in the bucket are changed.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:191](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L191)
+[constructs/managed-objects-bucket.ts:197](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L197)
 
 ___
 
@@ -131,4 +137,4 @@ For example:
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:175](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L175)
+[constructs/managed-objects-bucket.ts:181](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L181)
