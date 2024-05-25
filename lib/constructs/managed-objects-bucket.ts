@@ -24,8 +24,11 @@ type InlineBucketObject = {
 type CloudFrontInvalidationObjectChangeActionProps = {
 	/** CloudFront Distribution to create an invalidation for. */
 	distribution: cloudfront.Distribution,
-	/** Whether to wait for the invalidation to be completed before allowing the CloudFormation
-	 * update to continue. @default false */
+	/**
+	 * Whether to wait for the invalidation to be completed before allowing the CloudFormation
+	 * update to continue.
+	 * @default false
+	 */
 	waitForCompletion?: boolean
 }
 
@@ -55,15 +58,15 @@ class CloudFrontInvalidationObjectChangeAction extends ObjectChangeAction {
 }
 
 /** 
- * An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
- * `addObject` and `addObjectsFromAsset` methods.
+ * An S3 Bucket where the objects in the bucket are completely managed by CDK. A
+ * `Custom::ManagedBucketObjects` CFN resource internal to the ManagedObjectsBucket construct
+ * mutates objects in the bucket to align the bucket with the objects defined in the CDK
+ * definition. The objects in the bucket are otherwise read-only. Objects are added by calling
+ * the `addObject` and `addObjectsFromAsset` methods.
  * 
- * The objects in the bucket are completely managed by CDK. A `Custom::ManagedBucketObjects`
- * CFN resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
- * to align the bucket with the objects defined in the CDK definition. The objects in the
- * bucket are otherwise read-only.
- * 
- * ManagedObjectsBucket extends Bucket. All props from Bucket are allowed except:
+ * ManagedObjectsBucket extends [Bucket](
+ * https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3.Bucket.html). All props from
+ * Bucket are allowed except:
  * 
  * 1. `removalPolicy` and `autoDeleteObjects` are not configurable. ManagedObjectsBuckets are
  * always emptied and destroyed on removal.
@@ -158,8 +161,10 @@ export class ManagedObjectsBucket extends s3.Bucket {
 		})
 	}
 
-	/** Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
-	 * like resource ARNs can be used here. */
+	/**
+	 * Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
+	 * like resource ARNs can be used here.
+	 */
 	addObject(props: {
 		/** S3 object key for the object. */
 		key: string,
