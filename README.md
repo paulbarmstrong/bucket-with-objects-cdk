@@ -12,8 +12,8 @@ construct mutates objects in the bucket to align the bucket with the objects def
 the CDK definition. The objects in the bucket are otherwise read-only.
 
 Objects can be defined by:
-1. An Asset, by calling addManagedObjectsFromAsset.
-2. CDK code, by calling addManagedObject.
+1. An Asset, by calling addObjectsFromAsset.
+2. CDK code, by calling addObject.
 
 Benefits over [BucketDeployment](
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_deployment.BucketDeployment.html
@@ -59,10 +59,10 @@ export class MyStack extends cdk.Stack {
 		const bucket = new ManagedObjectsBucket(this, "Bucket", {
 			bucketName: "my-example-managed-objects-bucket"
 		})
-		bucket.addManagedObjectsFromAsset({
+		bucket.addObjectsFromAsset({
 			asset: new s3_assets.Asset(this, "MyAsset", { path: "./my-local-files" })
 		})
-		bucket.addManagedObject({
+		bucket.addObject({
 			key: "config.json",
 			body: JSON.stringify({ "bucketArn": bucket.bucketArn })
 		})

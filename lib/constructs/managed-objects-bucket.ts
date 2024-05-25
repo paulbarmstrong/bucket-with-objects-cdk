@@ -56,7 +56,7 @@ class CloudFrontInvalidationObjectChangeAction extends ObjectChangeAction {
 
 /** 
  * An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
- * `addManagedObject` and `addManagedObjectsFromAsset` methods.
+ * `addObject` and `addObjectsFromAsset` methods.
  * 
  * The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
  * resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
@@ -154,7 +154,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 
 	/** Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
 	 * like resource ARNs can be used here. */
-	addManagedObject(props: {
+	addObject(props: {
 		/** S3 object key for the object. */
 		key: string,
 		/** Content to be stored within the S3 object. */
@@ -170,9 +170,9 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	 * https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html).
 	 * For example:
 	 * 
-	 * `bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
+	 * `bucket.addObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
 	 */
-	addManagedObjectsFromAsset(props: {
+	addObjectsFromAsset(props: {
 		/** The [Asset](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html
 		 * ) to be added to the bucket. */
 		asset: s3_assets.Asset
@@ -188,7 +188,7 @@ export class ManagedObjectsBucket extends s3.Bucket {
 	}
 
 	/** Add an action to be performed when objects in the bucket are changed. */
-	addManagedObjectChangeAction(action: ObjectChangeAction) {
+	addObjectChangeAction(action: ObjectChangeAction) {
 		this.#ObjectChangeActions.push(action)
 		if ((action as CloudFrontInvalidationObjectChangeAction).distribution !== undefined) {
 			this.#handlerRole.addToPolicy(new iam.PolicyStatement({

@@ -3,7 +3,7 @@
 # Class: ManagedObjectsBucket
 
 An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
-`addManagedObject` and `addManagedObjectsFromAsset` methods.
+`addObject` and `addObjectsFromAsset` methods.
 
 The objects in the bucket are completely managed by CDK. An "object manager" custom CFN
 resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
@@ -29,9 +29,9 @@ always emptied and destroyed on removal.
 
 ### Methods
 
-- [addManagedObject](ManagedObjectsBucket.md#addmanagedobject)
-- [addManagedObjectChangeAction](ManagedObjectsBucket.md#addmanagedobjectchangeaction)
-- [addManagedObjectsFromAsset](ManagedObjectsBucket.md#addmanagedobjectsfromasset)
+- [addObject](ManagedObjectsBucket.md#addobject)
+- [addObjectChangeAction](ManagedObjectsBucket.md#addobjectchangeaction)
+- [addObjectsFromAsset](ManagedObjectsBucket.md#addobjectsfromasset)
 
 ## Constructors
 
@@ -61,9 +61,9 @@ s3.Bucket.constructor
 
 ## Methods
 
-### addManagedObject
+### addObject
 
-▸ **addManagedObject**(`props`): `void`
+▸ **addObject**(`props`): `void`
 
 Add an object to the bucket based on a given key and body. Deploy-time values from the CDK
 like resource ARNs can be used here.
@@ -86,9 +86,9 @@ like resource ARNs can be used here.
 
 ___
 
-### addManagedObjectChangeAction
+### addObjectChangeAction
 
-▸ **addManagedObjectChangeAction**(`action`): `void`
+▸ **addObjectChangeAction**(`action`): `void`
 
 Add an action to be performed when objects in the bucket are changed.
 
@@ -108,15 +108,15 @@ Add an action to be performed when objects in the bucket are changed.
 
 ___
 
-### addManagedObjectsFromAsset
+### addObjectsFromAsset
 
-▸ **addManagedObjectsFromAsset**(`props`): `void`
+▸ **addObjectsFromAsset**(`props`): `void`
 
 Add objects to the bucket based on an [Asset](
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_assets-readme.html).
 For example:
 
-`bucket.addManagedObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
+`bucket.addObjectsFromAsset({ asset: new Asset(this, "MyAsset", { path: "./my-local-files" }) })`
 
 #### Parameters
 
