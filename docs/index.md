@@ -1,6 +1,6 @@
-cdk-managed-objects-bucket
+@paulbarmstrong/cdk-managed-objects-bucket
 
-# cdk-managed-objects-bucket
+# @paulbarmstrong/cdk-managed-objects-bucket
 
 ## Table of contents
 

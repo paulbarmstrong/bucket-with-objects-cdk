@@ -45,7 +45,7 @@ actually need to wait for it to complete.
 ### Installation
 
 ```
-npm install cdk-managed-objects-bucket
+npm install @paulbarmstrong/cdk-managed-objects-bucket
 ```
 
 ### Usage
@@ -56,7 +56,7 @@ This is an example of how it may be used in a CDK app:
 import * as cdk from "aws-cdk-lib"
 import * as logs from "aws-cdk-lib/aws-logs"
 import * as s3_assets from "aws-cdk-lib/aws-s3-assets"
-import { ManagedObjectsBucket } from "cdk-managed-objects-bucket"
+import { ManagedObjectsBucket } from "@paulbarmstrong/cdk-managed-objects-bucket"
 import { Construct } from "constructs"
 
 export class MyStack extends cdk.Stack {
@@ -79,3 +79,8 @@ export class MyStack extends cdk.Stack {
 ### Documentation
 
 Please see [the low level documentation](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/docs/index.md) for more details.
+
+### Issues
+
+If you have any issue with the package I would like to hear about it. Please create an issue on
+[GitHub](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/issues).

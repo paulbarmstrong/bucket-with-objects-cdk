@@ -1,16 +1,16 @@
-[cdk-managed-objects-bucket](../index.md) / ManagedObjectsBucket
+[@paulbarmstrong/cdk-managed-objects-bucket](../index.md) / ManagedObjectsBucket
 
 # Class: ManagedObjectsBucket
 
-An S3 Bucket that has its objects defined in CDK. Objects are added by calling the
-`addObject` and `addObjectsFromAsset` methods.
+An S3 Bucket where the objects in the bucket are completely managed by CDK. A
+`Custom::ManagedBucketObjects` CFN resource internal to the ManagedObjectsBucket construct
+mutates objects in the bucket to align the bucket with the objects defined in the CDK
+definition. The objects in the bucket are otherwise read-only. Objects are added by calling
+the `addObject` and `addObjectsFromAsset` methods.
 
-The objects in the bucket are completely managed by CDK. A `Custom::ManagedBucketObjects`
-CFN resource internal to the ManagedObjectsBucket construct mutates objects in the bucket
-to align the bucket with the objects defined in the CDK definition. The objects in the
-bucket are otherwise read-only.
-
-ManagedObjectsBucket extends Bucket. All props from Bucket are allowed except:
+ManagedObjectsBucket extends [Bucket](
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3.Bucket.html). All props from
+Bucket are allowed except:
 
 1. `removalPolicy` and `autoDeleteObjects` are not configurable. ManagedObjectsBuckets are
 always emptied and destroyed on removal.
@@ -63,7 +63,7 @@ s3.Bucket.constructor
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:86](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L86)
+[constructs/managed-objects-bucket.ts:89](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L89)
 
 ## Methods
 
@@ -88,7 +88,7 @@ like resource ARNs can be used here.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:163](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L163)
+[constructs/managed-objects-bucket.ts:168](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L168)
 
 ___
 
@@ -110,7 +110,7 @@ Add an action to be performed when objects in the bucket are changed.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:197](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L197)
+[constructs/managed-objects-bucket.ts:202](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L202)
 
 ___
 
@@ -137,4 +137,4 @@ For example:
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:181](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L181)
+[constructs/managed-objects-bucket.ts:186](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L186)

@@ -1,4 +1,4 @@
-[cdk-managed-objects-bucket](../index.md) / ObjectChangeAction
+[@paulbarmstrong/cdk-managed-objects-bucket](../index.md) / ObjectChangeAction
 
 # Class: ObjectChangeAction
 
@@ -45,4 +45,4 @@ in the bucket have changed.
 
 #### Defined in
 
-[constructs/managed-objects-bucket.ts:40](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L40)
+[constructs/managed-objects-bucket.ts:43](https://github.com/paulbarmstrong/cdk-managed-objects-bucket/blob/main/lib/constructs/managed-objects-bucket.ts#L43)
